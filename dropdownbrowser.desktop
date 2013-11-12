@@ -1,0 +1,8 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+Name=Drop-down Browser
+Comment=Quick access to a web app.
+Icon=emblem-web
+X-XFCE-Internal=false
+X-XFCE-Module=dropdownbrowser

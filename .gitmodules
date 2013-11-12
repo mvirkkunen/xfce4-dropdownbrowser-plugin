@@ -1,0 +1,3 @@
+[submodule "xfce4-vala"]
+	path = xfce4-vala
+	url = http://git.xfce.org/bindings/xfce4-vala/
