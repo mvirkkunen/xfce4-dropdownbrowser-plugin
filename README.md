@@ -1,7 +1,7 @@
 xfce4-browser-plugin
 ====================
 
-A browser window plugin for Xfce4's panel. Allows quick access to a web app via a popup window.
+A drop-down browser plugin for Xfce4's panel. Allows quick access to a web app via a popup window.
 
 Requirements
 ============
@@ -13,5 +13,5 @@ Installation
 ============
 
     make
-    make install # optional; paths valid on Arch Linux
+    make install # optional; only tested on Arch Linux
     make restart # optional; restarts xfce4-panel to reload plugins
