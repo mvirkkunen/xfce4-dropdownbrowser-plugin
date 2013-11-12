@@ -1,5 +1,5 @@
-xfce4-browser-plugin
-====================
+xfce4-dropdownbrowser-plugin
+============================
 
 A drop-down browser plugin for Xfce4's panel. Allows quick access to a web app via a popup window.
 
