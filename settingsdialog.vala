@@ -12,31 +12,34 @@ class SettingsDialog : Xfce.TitledDialog {
         icon_name = "gtk-properties";
 
         add_buttons(
-            Gtk.Stock.CLOSE, Gtk.ResponseType.CLOSE,
+            dgettext("gtk30", "_Close"), Gtk.ResponseType.CLOSE,
             null);
 
-        Gtk.Table table = new Gtk.Table(5, 2, false);
+        Gtk.Grid grid = new Gtk.Grid();
+        grid.margin = 16;
 
-        table.row_spacing = 8;
-        table.column_spacing = 8;
+        grid.row_spacing = 16;
+        grid.column_spacing = 16;
 
-        table.attach_defaults(label("_URL:", url), 0, 1, 0, 1);
-        table.attach_defaults(url, 1, 2, 0, 1);
+        grid.attach(label("_URL:", url), 0, 0, 1, 1);
+        grid.attach(url, 1, 0, 1, 1);
+        url.set_hexpand(true);
 
-        table.attach_defaults(label("_Icon:", icon), 0, 1, 1, 2);
-        table.attach(icon, 1, 2, 1, 2, Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0, 0);
-        //table.attach_defaults(icon, 1, 2, 1, 2);
+        grid.attach(label("_Icon:", icon), 0, 1, 1, 1);
+        Gtk.Box iconBox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        iconBox.add(icon);
+        grid.attach(iconBox, 1, 1, 1, 1);
 
-        table.attach_defaults(label("_Text:", text), 0, 1, 2, 3);
-        table.attach_defaults(text, 1, 2, 2, 3);
+        grid.attach(label("_Text:", text), 0, 2, 1, 1);
+        grid.attach(text, 1, 2, 1, 1);
 
-        table.attach_defaults(label("_Width:", width), 0, 1, 3, 4);
-        table.attach(width, 1, 2, 3, 4, Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0, 0);
+        grid.attach(label("_Width:", width), 0, 3, 1, 1);
+        grid.attach(width, 1, 3, 1, 1);
 
-        table.attach_defaults(label("_Height:", height), 0, 1, 4, 5);
-        table.attach(height, 1, 2, 4, 5, Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0, 0);
+        grid.attach(label("_Height:", height), 0, 4, 1, 1);
+        grid.attach(height, 1, 4, 1, 1);
 
-        ((Gtk.VBox)get_content_area()).add(table);
+        get_content_area().add(grid);
 
         response.connect((t, r) => {
             if (r == Gtk.ResponseType.CLOSE)
@@ -45,15 +48,12 @@ class SettingsDialog : Xfce.TitledDialog {
 
         url.focus_out_event.connect(() => { settings.url = url.text; return false; });
 
-        icon.set_alignment(0.0f, 0.5f);
         icon.clicked.connect(icon_clicked);
 
         text.focus_out_event.connect(() => { settings.text = text.text; return false; });
 
-        width.set_alignment(0.0f);
         width.focus_out_event.connect(() => { settings.width = (int)width.value; return false; });
 
-        height.set_alignment(0.0f);
         height.focus_out_event.connect(() => { settings.height = (int)height.value; return false; });
     }
 
@@ -72,8 +72,8 @@ class SettingsDialog : Xfce.TitledDialog {
     void icon_clicked() {
         var dlg = new Exo.IconChooserDialog("Select an icon", this);
         dlg.add_buttons(
-            Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-            Gtk.Stock.OK, Gtk.ResponseType.OK,
+            dgettext("gtk30", "_Cancel"), Gtk.ResponseType.CANCEL,
+            dgettext("gtk30", "_Ok"), Gtk.ResponseType.OK,
             null);
 
         dlg.response.connect((t, r) => {
@@ -94,9 +94,6 @@ class SettingsDialog : Xfce.TitledDialog {
     static Gtk.Label label(string text, Gtk.Widget widget) {
         Gtk.Label lbl = new Gtk.Label.with_mnemonic(text);
         lbl.mnemonic_widget = widget;
-        lbl.set_alignment(1.0f, 0.5f);
-        lbl.set_alignment(1.0f, 0.5f);
-
         return lbl;
     }
 

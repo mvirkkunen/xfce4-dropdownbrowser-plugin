@@ -6,3 +6,4 @@ Comment=Quick access to a web app.
 Icon=emblem-web
 X-XFCE-Internal=false
 X-XFCE-Module=dropdownbrowser
+X-XFCE-API=2.0

@@ -5,6 +5,8 @@ class DropdownBrowserPlugin : Xfce.PanelPlugin {
     Gtk.Image buttonIcon;
     Gtk.Label buttonLabel;
 
+    Gtk.MenuItem reloadMenuItem;
+
     Gtk.Window popup;
     WebKit.WebView webView;
 
@@ -13,13 +15,13 @@ class DropdownBrowserPlugin : Xfce.PanelPlugin {
     public override void @construct() {
         settings = Settings.load_from_file(this.lookup_rc_file());
 
-        init_popup();
         init_button();
+        init_menu();
+        init_popup();
 
         menu_show_configure();
 
         configure_plugin.connect(show_configure);
-        //save.connect(() => { settings.save_to_file(save_location(true)); });
         size_changed.connect(() => true);
         destroy.connect(() => { Gtk.main_quit (); });
 
@@ -32,12 +34,13 @@ class DropdownBrowserPlugin : Xfce.PanelPlugin {
     void init_button() {
         button = (Gtk.ToggleButton)Xfce.panel_create_toggle_button();
 
-        var hbox = new Gtk.HBox(false, 4);
+        var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 4);
+        hbox.set_margin_start(4);
+        hbox.set_margin_end(4);
 
         button.add(hbox);
 
         buttonIcon = new Gtk.Image();
-        buttonIcon.set_alignment(0.5f, 0.5f);
         hbox.pack_start(buttonIcon, false, false, 0);
 
         buttonLabel = new Gtk.Label(null);
@@ -52,6 +55,17 @@ class DropdownBrowserPlugin : Xfce.PanelPlugin {
             else
                 popup.hide();
         });
+    }
+
+    void init_menu() {
+        reloadMenuItem = new Gtk.MenuItem();
+
+        reloadMenuItem.label = "Reload";
+        reloadMenuItem.activate.connect(() => {
+            webView.reload();
+        });
+
+        menu_insert_item(reloadMenuItem);
     }
 
     void init_popup() {
@@ -81,14 +95,16 @@ class DropdownBrowserPlugin : Xfce.PanelPlugin {
     void setting_notify(ParamSpec p) {
         switch (p.name) {
             case "url":
-                webView.open(settings.url);
+                webView.load_uri(settings.url);
                 break;
 
             case "icon":
                 {
-                    Gdk.Pixbuf icon = settings.load_icon(button.get_screen(), 16);
+                    Gdk.Pixbuf? icon = settings.load_icon(button.get_screen(), 16);
 
-                    buttonIcon.set_from_pixbuf(icon);
+                    if (icon != null) {
+                        buttonIcon.set_from_pixbuf(icon);
+                    }
                 }
                 break;
 
@@ -120,9 +136,8 @@ class DropdownBrowserPlugin : Xfce.PanelPlugin {
 
         popup.show_all();
 
-        Gdk.Rectangle screen_area;
-        Gdk.Screen screen = button.get_screen();
-        screen.get_monitor_geometry(screen.get_monitor_at_point(btn_x, btn_y), out screen_area);
+        Gdk.Screen screen = (!)button.get_screen();
+        Gdk.Rectangle screen_area = screen.get_display().get_monitor_at_point(btn_x, btn_y).geometry;
 
         Gtk.Allocation popup_size;
         popup.get_allocation(out popup_size);

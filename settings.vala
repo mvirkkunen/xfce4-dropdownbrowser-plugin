@@ -13,13 +13,7 @@ class Settings : Object {
     public int height { get; set; default = 320; }
 
     public Gdk.Pixbuf? load_icon(Gdk.Screen screen, int size) {
-        try {
-            return Xfce.panel_pixbuf_from_source(icon, Gtk.IconTheme.get_for_screen(screen), size);
-        } catch {
-            error("Failed to load icon");
-            Gtk.main_quit();
-            return null;
-        }
+        return Xfce.panel_pixbuf_from_source(icon, Gtk.IconTheme.get_for_screen(screen), size);
     }
 
     public void for_each_property(PropertyIterator iter) {

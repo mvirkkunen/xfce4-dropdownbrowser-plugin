@@ -1,10 +1,20 @@
 PREFIX ?= /usr
-#PACKAGES = gmodule-2.0 gtk+-2.0 webkit-1.0 exo-1 libxfce4ui-1 libxfce4panel-1.0
 PACKAGES = gmodule-2.0 gtk+-3.0 webkit2gtk-4.0 exo-2 libxfce4ui-2 libxfce4panel-2.0
 
 libdropdownbrowser.so: *.vala
-	valac --vapidir ./xfce4-vala/vapi $(patsubst %,--pkg %, $(PACKAGES)) -C *.vala
-	gcc -shared -fPIC $$(pkg-config --cflags --libs $(PACKAGES)) -o libdropdownbrowser.so *.c
+	valac \
+		--vapidir ./vapi/ \
+		--vapidir ./xfce4-vala/vapi \
+		$(patsubst %,--pkg %, $(PACKAGES)) \
+		-C \
+		*.vala
+	gcc \
+		-shared \
+		-fPIC \
+		$$(pkg-config --cflags --libs $(PACKAGES)) \
+		-o libdropdownbrowser.so \
+		-DGETTEXT_PACKAGE \
+		*.c
 
 clean:
 	rm *.c
